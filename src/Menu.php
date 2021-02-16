@@ -69,6 +69,7 @@ abstract class Menu
      * @param mixed $uri
      * @param array $params
      * @param array $meta
+     *
      * @return $this
      */
     protected function addLink($title, $uri, $params = [], $meta = [])
@@ -79,10 +80,11 @@ abstract class Menu
     }
 
     /**
-     * Add new menu group
+     * Add new menu group.
      *
      * @param mixed $title
      * @param array $items
+     *
      * @return $this
      */
     public function addGroup($title, $items = [])

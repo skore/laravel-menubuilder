@@ -2,11 +2,11 @@
 
 namespace SkoreLabs\LaravelMenuBuilder;
 
-use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Traits\Macroable;
+use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
 class MenuGroup implements Responsable
 {
@@ -24,8 +24,8 @@ class MenuGroup implements Responsable
     protected $items;
 
     /**
-     *
      * @param array $items
+     *
      * @return void
      */
     public function __construct($title = 'default', array $items = [])
@@ -36,13 +36,14 @@ class MenuGroup implements Responsable
     }
 
     /**
-     *
      * @param mixed $title
      * @param mixed $uri
      * @param mixed $params
-     * @param bool $permission
-     * @return $this
+     * @param bool  $permission
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return $this
      */
     public function addLink($title, $uri, $params = [], $model = null, $meta = [])
     {
@@ -54,8 +55,8 @@ class MenuGroup implements Responsable
     }
 
     /**
-     *
      * @param mixed $item
+     *
      * @return $this
      */
     public function add($item)
@@ -68,7 +69,8 @@ class MenuGroup implements Responsable
     /**
      * Create an HTTP response that represents the object.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function toResponse($request)
