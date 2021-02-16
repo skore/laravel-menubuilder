@@ -1,0 +1,28 @@
+<?php
+
+namespace Database\Seeders;
+
+use Skorelabs\LaravelMenuBuilder\Menu;
+
+class {{ class }} extends Menu
+{
+    /**
+     * Instantiate menu class.
+     *
+     * @return array
+     */
+    public function __construct()
+    {
+        return parent::__construct();
+    }
+
+    /**
+     * Get menu content items.
+     *
+     * @return array
+     */
+    public function items()
+    {
+        return [];
+    }
+}
