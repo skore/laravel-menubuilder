@@ -1,6 +1,6 @@
 <?php
 
-namespace Skorelabs\LaravelMenuBuilder;
+namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;

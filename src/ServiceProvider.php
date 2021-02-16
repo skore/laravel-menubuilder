@@ -1,9 +1,9 @@
 <?php
 
-namespace Skorelabs\LaravelMenuBuilder;
+namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Skorelabs\LaravelMenuBuilder\Console\MenuMakeCommand;
+use SkoreLabs\LaravelMenuBuilder\Console\MenuMakeCommand;
 
 class ServiceProvider extends BaseServiceProvider
 {

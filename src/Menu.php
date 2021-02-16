@@ -1,10 +1,10 @@
 <?php
 
-namespace Skorelabs\LaravelMenuBuilder;
+namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
-use Skorelabs\LaravelMenuBuilder\Traits\Makeable;
+use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
 abstract class Menu
 {
@@ -65,7 +65,7 @@ abstract class Menu
      * @param array $params
      * @param array $meta
      *
-     * @return \Skorelabs\LaravelMenuBuilder\MenuLink
+     * @return \SkoreLabs\LaravelMenuBuilder\MenuLink
      */
     protected function link($title, $uri, $params = [], $meta = [])
     {

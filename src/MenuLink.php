@@ -1,10 +1,10 @@
 <?php
 
-namespace Skorelabs\LaravelMenuBuilder;
+namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Macroable;
-use Skorelabs\LaravelMenuBuilder\Traits\Makeable;
+use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
 class MenuLink implements Arrayable
 {

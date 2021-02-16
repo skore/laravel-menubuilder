@@ -1,6 +1,6 @@
 <?php
 
-namespace Skorelabs\LaravelMenuBuilder\Traits;
+namespace SkoreLabs\LaravelMenuBuilder\Traits;
 
 trait Makeable
 {

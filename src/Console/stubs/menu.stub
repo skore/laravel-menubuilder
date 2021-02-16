@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Skorelabs\LaravelMenuBuilder\Menu;
+use SkoreLabs\LaravelMenuBuilder\Menu;
 
 class {{ class }} extends Menu
 {

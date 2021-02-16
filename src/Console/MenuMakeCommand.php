@@ -1,6 +1,6 @@
 <?php
 
-namespace Skorelabs\LaravelMenuBuilder\Console;
+namespace SkoreLabs\LaravelMenuBuilder\Console;
 
 use Illuminate\Console\GeneratorCommand;
 use Illuminate\Filesystem\Filesystem;
