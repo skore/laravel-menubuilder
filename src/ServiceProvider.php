@@ -2,8 +2,16 @@
 
 namespace SkoreLabs\LaravelMenuBuilder;
 
+use Illuminate\Routing\Events\RouteMatched;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Illuminate\Support\Str;
 use SkoreLabs\LaravelMenuBuilder\Console\MenuMakeCommand;
+use Symfony\Component\Finder\Finder;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -20,7 +28,11 @@ class ServiceProvider extends BaseServiceProvider
             ], 'menubuilder-config');
         }
 
-        MenuBuilder::menusIn(config('menus.path', ''));
+        $menusPath = config('menus.path', '');
+
+        if ((new Finder)->in($menusPath)->count() > 0) {
+            Manager::menusIn($menusPath);
+        }
     }
 
     /**
@@ -33,5 +45,14 @@ class ServiceProvider extends BaseServiceProvider
         $this->commands([
             MenuMakeCommand::class,
         ]);
+
+        Event::listen(RouteMatched::class, static function (RouteMatched $event) {
+            /** @var \SkoreLabs\LaravelMenuBuilder\Menu $menu */
+            foreach (Manager::$menus as $menu => $routes) {
+                Str::is($routes, $event->route->getName())
+                    ? $menu::make()
+                    : null;
+            }
+        });
     }
 }

@@ -4,12 +4,14 @@ namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Macroable;
+use SkoreLabs\LaravelMenuBuilder\Traits\IsConditionallyRendered;
 use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
 class MenuLink implements Arrayable
 {
     use Makeable;
     use Macroable;
+    use IsConditionallyRendered;
 
     /**
      * @var mixed
@@ -42,16 +44,14 @@ class MenuLink implements Arrayable
      * @param mixed $title
      * @param mixed $uri
      * @param array $params
-     * @param array $meta
      *
      * @return void
      */
-    public function __construct($title, $uri, $params = [], $meta = [])
+    public function __construct($title, $uri, $params = [])
     {
         $this->title = $title;
         $this->uri = $uri;
         $this->params = $params;
-        $this->meta = $meta;
     }
 
     /**
@@ -94,6 +94,13 @@ class MenuLink implements Arrayable
         return $this;
     }
 
+    public function withMeta(array $meta = [])
+    {
+        $this->meta = array_merge($this->meta, $meta);
+
+        return $this;
+    }
+
     /**
      * Get the instance as an array.
      *
@@ -116,6 +123,6 @@ class MenuLink implements Arrayable
      */
     protected function buildRoute()
     {
-        return route($this->path, $this->params);
+        return route($this->uri, $this->params);
     }
 }

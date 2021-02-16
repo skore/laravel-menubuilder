@@ -2,14 +2,21 @@
 
 namespace SkoreLabs\LaravelMenuBuilder;
 
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
 use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
-abstract class Menu
+abstract class Menu implements Arrayable
 {
     use Makeable;
     use Macroable;
+
+    /**
+     * @var array
+     */
+    public static $routes = [];
 
     /**
      * @var array
@@ -21,25 +28,13 @@ abstract class Menu
      *
      * @return array
      */
-    public function __construct($items = [])
+    public function __construct()
     {
-        $this->items = $items ?: $this->items();
-
-        if (MenuBuilder::inInertia() && $this->view()) {
-            return inertia()->share(config('menus.inertia.key_prefix').'.'.$this->getUri(), $this->items);
+        if (Manager::inInertia()) {
+            return inertia()->share(
+                config('menus.inertia.key_prefix').'.'.$this->getUri(), $this->toArray()
+            );
         }
-
-        return $this->items;
-    }
-
-    /**
-     * Show menu at view.
-     *
-     * @return bool
-     */
-    protected function view()
-    {
-        return true;
     }
 
     /**
@@ -49,7 +44,7 @@ abstract class Menu
      */
     protected function getUri()
     {
-        return Str::snake(class_basename(self::class));
+        return Str::snake(class_basename($this::class));
     }
 
     /**
@@ -70,13 +65,11 @@ abstract class Menu
      * @param array $params
      * @param array $meta
      *
-     * @return $this
+     * @return \SkoreLabs\LaravelMenuBuilder\MenuLink
      */
     protected function addLink($title, $uri, $params = [], $meta = [])
     {
-        $this->items[] = new MenuLink($title, $uri, $params, $meta);
-
-        return $this;
+        return new MenuLink($title, $uri, $params, $meta);
     }
 
     /**
@@ -85,12 +78,20 @@ abstract class Menu
      * @param mixed $title
      * @param array $items
      *
-     * @return $this
+     * @return \SkoreLabs\LaravelMenuBuilder\MenuGroup
      */
     public function addGroup($title, $items = [])
     {
-        $this->items[] = new MenuGroup($title, $items);
+        return new MenuGroup($title, $items);
+    }
 
-        return $this;
+    /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return Collection::make($this->items())->flatMap->toArray()->all();
     }
 }

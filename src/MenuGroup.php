@@ -2,16 +2,19 @@
 
 namespace SkoreLabs\LaravelMenuBuilder;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Traits\Macroable;
+use SkoreLabs\LaravelMenuBuilder\Traits\IsConditionallyRendered;
 use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
-class MenuGroup implements Responsable
+class MenuGroup implements Responsable, Arrayable
 {
     use Makeable;
     use Macroable;
+    use IsConditionallyRendered;
 
     /**
      * @var mixed
@@ -19,7 +22,7 @@ class MenuGroup implements Responsable
     protected $title;
 
     /**
-     * @var Illuminate\Support\Collection
+     * @var \Illuminate\Support\Collection
      */
     protected $items;
 
@@ -32,7 +35,7 @@ class MenuGroup implements Responsable
     {
         $this->title = $title;
 
-        $this->items = Collection::make($items);
+        $this->items = Collection::make($items)->each->authorizedToSee(request())->values();
     }
 
     /**
@@ -67,6 +70,16 @@ class MenuGroup implements Responsable
     }
 
     /**
+     * Get the instance as an array.
+     *
+     * @return array
+     */
+    public function toArray()
+    {
+        return [$this->title => $this->items->map->toArray()->all()];
+    }
+
+    /**
      * Create an HTTP response that represents the object.
      *
      * @param \Illuminate\Http\Request $request
@@ -75,6 +88,6 @@ class MenuGroup implements Responsable
      */
     public function toResponse($request)
     {
-        return Response::json($this->items->toArray());
+        return Response::json($this->toArray());
     }
 }

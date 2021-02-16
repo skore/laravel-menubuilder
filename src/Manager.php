@@ -3,18 +3,19 @@
 namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 use Inertia\ServiceProvider;
 use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 
-class MenuBuilder
+class Manager
 {
     /**
      * @var array
      */
-    protected static $menus;
+    public static $menus = [];
 
     /**
      * Register the given menus.
@@ -39,7 +40,7 @@ class MenuBuilder
      */
     public static function menusIn($directory)
     {
-        $namespace = app()->getNamespace();
+        $namespace = App::getNamespace();
 
         $menus = [];
 
@@ -59,7 +60,7 @@ class MenuBuilder
         }
 
         static::menus(
-            collect($menus)->sort()->all()
+            Collection::make($menus)->sort()->mapWithKeys(fn ($class) => [$class => $class::$routes])->all()
         );
     }
 
@@ -71,8 +72,8 @@ class MenuBuilder
     public static function inInertia()
     {
         return (function_exists('inertia')
-            ?: App::bound(ServiceProvider::class)
-            ?: Request::hasMacro('inertia')
-        ) && Request::inertia();
+            ?: App::bound('Inertia\ServiceProvider')
+            // ?: Request::hasMacro('inertia')
+        );
     }
 }
