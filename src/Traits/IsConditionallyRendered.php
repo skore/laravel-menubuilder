@@ -17,7 +17,8 @@ trait IsConditionallyRendered
     /**
      * Determine if the filter should be available for the given request.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return bool
      */
     public function authorizedToSee(Request $request)
@@ -29,6 +30,7 @@ trait IsConditionallyRendered
      * Add item when the condition is truth.
      *
      * @param \Closure $callback
+     *
      * @return $this
      */
     public function when(\Closure $callback)
@@ -42,6 +44,7 @@ trait IsConditionallyRendered
      * Add item when the user has permissions.
      *
      * @param mixed $policy
+     *
      * @return void
      */
     public function whenCan($ability, $arguments = [])

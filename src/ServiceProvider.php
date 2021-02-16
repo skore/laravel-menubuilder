@@ -3,11 +3,7 @@
 namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Routing\Events\RouteMatched;
-use Illuminate\Routing\Route;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Support\Str;
 use SkoreLabs\LaravelMenuBuilder\Console\MenuMakeCommand;
@@ -30,7 +26,7 @@ class ServiceProvider extends BaseServiceProvider
 
         $menusPath = config('menus.path', '');
 
-        if ((new Finder)->in($menusPath)->count() > 0) {
+        if ((new Finder())->in($menusPath)->count() > 0) {
             Manager::menusIn($menusPath);
         }
     }

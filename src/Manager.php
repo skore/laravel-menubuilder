@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
-use Inertia\ServiceProvider;
 use ReflectionClass;
 use Symfony\Component\Finder\Finder;
 
@@ -71,9 +70,9 @@ class Manager
      */
     public static function inInertia()
     {
-        return (function_exists('inertia')
+        return function_exists('inertia')
             ?: App::bound('Inertia\ServiceProvider')
             // ?: Request::hasMacro('inertia')
-        );
+;
     }
 }

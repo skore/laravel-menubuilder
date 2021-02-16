@@ -32,7 +32,8 @@ abstract class Menu implements Arrayable
     {
         if (Manager::inInertia()) {
             return inertia()->share(
-                config('menus.inertia.key_prefix').'.'.$this->getUri(), $this->toArray()
+                config('menus.inertia.key_prefix').'.'.$this->getUri(),
+                $this->toArray()
             );
         }
     }
