@@ -4,10 +4,10 @@ namespace Skorelabs\LaravelMenuBuilder;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
-use ReflectionClass;
-use Symfony\Component\Finder\Finder;
 use Illuminate\Support\Str;
 use Inertia\ServiceProvider;
+use ReflectionClass;
+use Symfony\Component\Finder\Finder;
 
 class MenuBuilder
 {
@@ -20,19 +20,21 @@ class MenuBuilder
      * Register the given menus.
      *
      * @param array $menus
+     *
      * @return static
      */
     public static function menus(array $menus)
     {
         static::$menus = array_merge(static::$menus, $menus);
 
-        return new static;
+        return new static();
     }
 
     /**
      * Register all of the menu classes in the given directory.
      *
-     * @param  string  $directory
+     * @param string $directory
+     *
      * @return void
      */
     public static function menusIn($directory)
@@ -41,11 +43,11 @@ class MenuBuilder
 
         $menus = [];
 
-        foreach ((new Finder)->in($directory)->files() as $menu) {
-            $menu = $namespace . str_replace(
+        foreach ((new Finder())->in($directory)->files() as $menu) {
+            $menu = $namespace.str_replace(
                 ['/', '.php'],
                 ['\\', ''],
-                Str::after($menu->getPathname(), app_path() . DIRECTORY_SEPARATOR)
+                Str::after($menu->getPathname(), app_path().DIRECTORY_SEPARATOR)
             );
 
             if (

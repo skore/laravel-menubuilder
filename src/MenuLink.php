@@ -2,13 +2,14 @@
 
 namespace Skorelabs\LaravelMenuBuilder;
 
-use Skorelabs\LaravelMenuBuilder\Traits\Makeable;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Macroable;
+use Skorelabs\LaravelMenuBuilder\Traits\Makeable;
 
 class MenuLink implements Arrayable
 {
-    use Makeable, Macroable;
+    use Makeable;
+    use Macroable;
 
     /**
      * @var mixed
@@ -42,6 +43,7 @@ class MenuLink implements Arrayable
      * @param mixed $uri
      * @param array $params
      * @param array $meta
+     *
      * @return void
      */
     public function __construct($title, $uri, $params = [], $meta = [])
@@ -56,6 +58,7 @@ class MenuLink implements Arrayable
      * Set icon for the link.
      *
      * @param mixed $icon
+     *
      * @return $this
      */
     public function setIcon($icon)
@@ -66,10 +69,11 @@ class MenuLink implements Arrayable
     }
 
     /**
-     *
      * @param mixed|null $key
-     * @return $this
+     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return $this
      */
     public function asTranslated($key = null)
     {
@@ -79,8 +83,8 @@ class MenuLink implements Arrayable
     }
 
     /**
-     *
      * @param bool $condition
+     *
      * @return $this
      */
     public function disable($condition = true)
@@ -100,15 +104,15 @@ class MenuLink implements Arrayable
         return [
             'title' => $this->title,
             'route' => $this->buildRoute(),
-            'icon' => $this->icon,
-            'meta' => (object) $this->meta,
+            'icon'  => $this->icon,
+            'meta'  => (object) $this->meta,
         ];
     }
 
     /**
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
      * @return string
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
      */
     protected function buildRoute()
     {

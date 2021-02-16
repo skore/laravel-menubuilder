@@ -2,13 +2,14 @@
 
 namespace Skorelabs\LaravelMenuBuilder;
 
-use Skorelabs\LaravelMenuBuilder\Traits\Makeable;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use Skorelabs\LaravelMenuBuilder\Traits\Makeable;
 
 abstract class Menu
 {
-    use Makeable, Macroable;
+    use Makeable;
+    use Macroable;
 
     /**
      * Instantiate menu class.
@@ -20,7 +21,7 @@ abstract class Menu
         $response = $this->items();
 
         if (MenuBuilder::inInertia() && $this->view()) {
-            return inertia()->share(config('menus.inertia.key_prefix') . '.' . $this->getUri(), $response);
+            return inertia()->share(config('menus.inertia.key_prefix').'.'.$this->getUri(), $response);
         }
 
         return $response;
@@ -63,6 +64,7 @@ abstract class Menu
      * @param mixed $uri
      * @param array $params
      * @param array $meta
+     *
      * @return \Skorelabs\LaravelMenuBuilder\MenuLink
      */
     protected function link($title, $uri, $params = [], $meta = [])

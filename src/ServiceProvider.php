@@ -16,7 +16,7 @@ class ServiceProvider extends BaseServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/../config/menus.php' => config_path('menus.php'),
+                __DIR__.'/../config/menus.php' => config_path('menus.php'),
             ], 'menubuilder-config');
         }
 

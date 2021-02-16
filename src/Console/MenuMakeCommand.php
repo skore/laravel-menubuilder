@@ -39,8 +39,9 @@ class MenuMakeCommand extends GeneratorCommand
     /**
      * Create a new command instance.
      *
-     * @param  \Illuminate\Filesystem\Filesystem  $files
-     * @param  \Illuminate\Support\Composer  $composer
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @param \Illuminate\Support\Composer      $composer
+     *
      * @return void
      */
     public function __construct(Filesystem $files, Composer $composer)
@@ -69,17 +70,18 @@ class MenuMakeCommand extends GeneratorCommand
      */
     protected function getStub()
     {
-        return __DIR__ . '/stubs/menu.stub';
+        return __DIR__.'/stubs/menu.stub';
     }
 
     /**
      * Get the destination class path.
      *
-     * @param  string  $name
+     * @param string $name
+     *
      * @return string
      */
     protected function getPath($name)
     {
-        return config('menus.path') . DIRECTORY_SEPARATOR . "${name}.php";
+        return config('menus.path').DIRECTORY_SEPARATOR."${name}.php";
     }
 }
