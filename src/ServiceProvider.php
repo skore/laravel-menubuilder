@@ -20,7 +20,7 @@ class ServiceProvider extends BaseServiceProvider
             ], 'menubuilder-config');
         }
 
-        MenuBuilder::menusIn(config('menus.path'));
+        MenuBuilder::menusIn(config('menus.path', ''));
     }
 
     /**

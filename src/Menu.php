@@ -12,19 +12,24 @@ abstract class Menu
     use Macroable;
 
     /**
+     * @var array
+     */
+    protected $items = [];
+
+    /**
      * Instantiate menu class.
      *
      * @return array
      */
-    public function __construct()
+    public function __construct($items = [])
     {
-        $response = $this->items();
+        $this->items = $items ?: $this->items();
 
         if (MenuBuilder::inInertia() && $this->view()) {
-            return inertia()->share(config('menus.inertia.key_prefix').'.'.$this->getUri(), $response);
+            return inertia()->share(config('menus.inertia.key_prefix').'.'.$this->getUri(), $this->items);
         }
 
-        return $response;
+        return $this->items;
     }
 
     /**
@@ -64,11 +69,26 @@ abstract class Menu
      * @param mixed $uri
      * @param array $params
      * @param array $meta
-     *
-     * @return \SkoreLabs\LaravelMenuBuilder\MenuLink
+     * @return $this
      */
-    protected function link($title, $uri, $params = [], $meta = [])
+    protected function addLink($title, $uri, $params = [], $meta = [])
     {
-        return new MenuLink($title, $uri, $params, $meta);
+        $this->items[] = new MenuLink($title, $uri, $params, $meta);
+
+        return $this;
+    }
+
+    /**
+     * Add new menu group
+     *
+     * @param mixed $title
+     * @param array $items
+     * @return $this
+     */
+    public function addGroup($title, $items = [])
+    {
+        $this->items[] = new MenuGroup($title, $items);
+
+        return $this;
     }
 }

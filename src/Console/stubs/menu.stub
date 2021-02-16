@@ -7,16 +7,6 @@ use SkoreLabs\LaravelMenuBuilder\Menu;
 class {{ class }} extends Menu
 {
     /**
-     * Instantiate menu class.
-     *
-     * @return array
-     */
-    public function __construct()
-    {
-        return parent::__construct();
-    }
-
-    /**
      * Get menu content items.
      *
      * @return array
@@ -24,5 +14,15 @@ class {{ class }} extends Menu
     public function items()
     {
         return [];
+    }
+
+    /**
+     * Show menu at view.
+     *
+     * @return bool
+     */
+    protected function view()
+    {
+        return true;
     }
 }
