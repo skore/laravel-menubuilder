@@ -3,7 +3,9 @@
 namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Routing\Events\RouteMatched;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Illuminate\Support\Str;
 use SkoreLabs\LaravelMenuBuilder\Console\MenuMakeCommand;
@@ -42,11 +44,17 @@ class ServiceProvider extends BaseServiceProvider
             MenuMakeCommand::class,
         ]);
 
+        if (Manager::enabled('blade')) {
+            Blade::directive('menus', function () {
+                return Session::get(Manager::prefix());
+            });
+        }
+
         Event::listen(RouteMatched::class, static function (RouteMatched $event) {
             /** @var \SkoreLabs\LaravelMenuBuilder\Menu $menu */
             foreach (Manager::$menus as $menu => $routes) {
                 Str::is($routes, $event->route->getName())
-                    ? $menu::make()
+                    ? $menu::make($event->request)
                     : null;
             }
         });

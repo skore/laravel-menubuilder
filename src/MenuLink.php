@@ -31,12 +31,7 @@ class MenuLink implements Arrayable
     /**
      * @var mixed
      */
-    protected $icon;
-
-    /**
-     * @var mixed
-     */
-    protected $meta;
+    protected $meta = [];
 
     /**
      * Instantiate menu link class.
@@ -55,7 +50,7 @@ class MenuLink implements Arrayable
     }
 
     /**
-     * Set icon for the link.
+     * Set icon for the menu link.
      *
      * @param mixed $icon
      *
@@ -63,12 +58,14 @@ class MenuLink implements Arrayable
      */
     public function setIcon($icon)
     {
-        $this->icon = $icon;
+        $this->meta['icon'] = $icon;
 
         return $this;
     }
 
     /**
+     * Translate link with Laravel built-in localization.
+     *
      * @param mixed|null $key
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
@@ -83,6 +80,8 @@ class MenuLink implements Arrayable
     }
 
     /**
+     * Disable menu link (appearance).
+     *
      * @param bool $condition
      *
      * @return $this
@@ -94,11 +93,30 @@ class MenuLink implements Arrayable
         return $this;
     }
 
+    /**
+     * Add meta to the link output.
+     *
+     * @param array $meta
+     *
+     * @return $this
+     */
     public function withMeta(array $meta = [])
     {
         $this->meta = array_merge($this->meta, $meta);
 
         return $this;
+    }
+
+    /**
+     * Compose Laravel app route.
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return string
+     */
+    protected function route()
+    {
+        return route($this->uri, $this->params);
     }
 
     /**
@@ -110,19 +128,8 @@ class MenuLink implements Arrayable
     {
         return [
             'title' => $this->title,
-            'route' => $this->buildRoute(),
-            'icon'  => $this->icon,
+            'route' => $this->route(),
             'meta'  => (object) $this->meta,
         ];
-    }
-
-    /**
-     * @throws \Illuminate\Contracts\Container\BindingResolutionException
-     *
-     * @return string
-     */
-    protected function buildRoute()
-    {
-        return route($this->uri, $this->params);
     }
 }

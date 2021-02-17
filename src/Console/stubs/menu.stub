@@ -1,28 +1,28 @@
 <?php
 
-namespace Database\Seeders;
+namespace App\Menus;
 
+use Illuminate\Http\Request;
 use SkoreLabs\LaravelMenuBuilder\Menu;
 
 class {{ class }} extends Menu
 {
     /**
+     * Route patterns where the menu is available.
+     *
+     * @var array
+     */
+    public static $routes = [];
+
+    /**
      * Get menu content items.
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
-    public function items()
+    protected function items(Request $request)
     {
         return [];
-    }
-
-    /**
-     * Show menu at view.
-     *
-     * @return bool
-     */
-    protected function view()
-    {
-        return true;
     }
 }

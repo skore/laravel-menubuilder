@@ -4,9 +4,15 @@ return [
 
     'path' => app_path('Menus'),
 
-    'inertia' => [
+    'key_prefix' => 'menus',
 
-        'key_prefix' => 'menuBuilder',
+    'integrations' => [
+
+        'inertia' => true,
+
+        'blade' => false,
+
+        'json' => false,
 
     ],
 

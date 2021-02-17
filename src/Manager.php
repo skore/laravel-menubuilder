@@ -5,6 +5,7 @@ namespace SkoreLabs\LaravelMenuBuilder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use ReflectionClass;
 use Symfony\Component\Finder\Finder;
@@ -64,15 +65,50 @@ class Manager
     }
 
     /**
-     * Check if app is under InertiaJS.
+     * Check if named integration is enabled.
+     *
+     * @param mixed $integration
      *
      * @return bool
      */
-    public static function inInertia()
+    public static function enabled($integration)
     {
-        return function_exists('inertia')
-            ?: App::bound('Inertia\ServiceProvider')
-            // ?: Request::hasMacro('inertia')
-;
+        return config("menus.integrations.${integration}", false);
+    }
+
+    /**
+     * Inject data into all enabled integrations.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param mixed $key
+     * @param mixed $data
+     *
+     * @return void
+     */
+    public static function dataInject(Request $request, $key, $data)
+    {
+        if (static::enabled('inertia') && $request->inertia()) {
+            inertia()->share($key, array_merge(inertia()->getShared($key), $data));
+        }
+
+        if (static::enabled('json') && $request->wantsJson()) {
+            // TODO:
+        }
+
+        if (static::enabled('blade') && !$request->wantsJson()) {
+            Session::flash(static::prefix(), array_merge(Session::get(static::prefix(), []), $data));
+        }
+    }
+
+    /**
+     * Get the prefix for the package interactions.
+     *
+     * @return mixed
+     *
+     * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     */
+    public static function prefix()
+    {
+        return config('menus.key_prefix', 'menuBuilder');
     }
 }

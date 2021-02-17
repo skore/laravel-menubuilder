@@ -2,10 +2,13 @@
 
 namespace SkoreLabs\LaravelMenuBuilder;
 
-use Illuminate\Contracts\Support\Arrayable;
+use DateInterval;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Traits\Macroable;
+use SkoreLabs\LaravelMenuBuilder\Contracts\Arrayable;
 use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
 abstract class Menu implements Arrayable
@@ -19,23 +22,56 @@ abstract class Menu implements Arrayable
     public static $routes = [];
 
     /**
-     * @var array
+     * Instantiate menu class.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return void
      */
-    protected $items = [];
+    public function __construct(Request $request)
+    {
+        $resolved = $this->resolve($request);
+
+        Manager::dataInject($request, $this->identifier(), $resolved)
+            && $resolved;
+    }
 
     /**
-     * Instantiate menu class.
+     * Menu resolver function, instantiate and cache it if specified.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return mixed
+     */
+    public function resolve(Request $request)
+    {
+        $resolver = function () use ($request) {
+            return $this->toArray($request);
+        };
+
+        if ($cacheFor = $this->cacheFor()) {
+            $cacheFor = is_numeric($cacheFor) ? new DateInterval(sprintf('PT%dS', $cacheFor * 60)) : $cacheFor;
+
+            return Cache::remember(
+                $this->cacheKey($request),
+                $cacheFor,
+                $resolver
+            );
+        }
+
+        return $resolver();
+    }
+
+    /**
+     * Get menu content items.
+     *
+     * @param \Illuminate\Http\Request $request
      *
      * @return array
      */
-    public function __construct()
+    protected function items(Request $request)
     {
-        if (Manager::inInertia()) {
-            return inertia()->share(
-                config('menus.inertia.key_prefix').'.'.$this->getUri(),
-                $this->toArray()
-            );
-        }
+        return [];
     }
 
     /**
@@ -43,19 +79,31 @@ abstract class Menu implements Arrayable
      *
      * @return string
      */
-    protected function getUri()
+    protected function identifier()
     {
         return Str::snake(class_basename($this::class));
     }
 
     /**
-     * Get menu content items.
+     * Cache this menu for the specified time period.
      *
-     * @return array
+     * @return \DateTimeInterface|\DateInterval|float|int
      */
-    protected function items()
+    public function cacheFor()
     {
-        return [];
+        //
+    }
+
+    /**
+     * Get the appropriate cache key for the menu.
+     *
+     * @param \Illuminate\Http\Request $request
+     *
+     * @return string
+     */
+    protected function cacheKey(Request $request)
+    {
+        return config('menus.key_prefix', 'menus') . '.' . $this->identifier();
     }
 
     /**
@@ -81,7 +129,7 @@ abstract class Menu implements Arrayable
      *
      * @return \SkoreLabs\LaravelMenuBuilder\MenuGroup
      */
-    public function addGroup($title, $items = [])
+    public function addGroup($title = null, array $items = [])
     {
         return new MenuGroup($title, $items);
     }
@@ -89,10 +137,15 @@ abstract class Menu implements Arrayable
     /**
      * Get the instance as an array.
      *
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function toArray()
+    public function toArray(Request $request)
     {
-        return Collection::make($this->items())->flatMap->toArray()->all();
+        return Collection::make($this->items($request))
+            ->flatMap
+            ->toArray($request)
+            ->all();
     }
 }

@@ -2,11 +2,13 @@
 
 namespace SkoreLabs\LaravelMenuBuilder;
 
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Contracts\Support\Responsable;
+use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Traits\Macroable;
+use SkoreLabs\LaravelMenuBuilder\Contracts\Arrayable;
 use SkoreLabs\LaravelMenuBuilder\Traits\IsConditionallyRendered;
 use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
@@ -34,11 +36,12 @@ class MenuGroup implements Responsable, Arrayable
     public function __construct($title = 'default', array $items = [])
     {
         $this->title = $title;
-
-        $this->items = Collection::make($items)->each->authorizedToSee(request())->values();
+        $this->items = Collection::make($items);
     }
 
     /**
+     * Add menu link to the group.
+     *
      * @param mixed $title
      * @param mixed $uri
      * @param mixed $params
@@ -58,13 +61,15 @@ class MenuGroup implements Responsable, Arrayable
     }
 
     /**
+     * Add multiple items to the group.
+     *
      * @param mixed $item
      *
      * @return $this
      */
-    public function add($item)
+    public function add($items)
     {
-        $this->items->add($item);
+        $this->items->merge(Arr::wrap($items));
 
         return $this;
     }
@@ -72,11 +77,19 @@ class MenuGroup implements Responsable, Arrayable
     /**
      * Get the instance as an array.
      *
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array
      */
-    public function toArray()
+    public function toArray(Request $request)
     {
-        return [$this->title => $this->items->map->toArray()->all()];
+        return [
+            $this->title => $this->items
+                ->each
+                ->authorizedToSee($request)
+                ->map
+                ->toArray()
+        ];
     }
 
     /**
@@ -88,6 +101,6 @@ class MenuGroup implements Responsable, Arrayable
      */
     public function toResponse($request)
     {
-        return Response::json($this->toArray());
+        return Response::json($this->toArray($request));
     }
 }

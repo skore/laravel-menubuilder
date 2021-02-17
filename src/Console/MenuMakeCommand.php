@@ -74,6 +74,17 @@ class MenuMakeCommand extends GeneratorCommand
     }
 
     /**
+     * Parse the class name and format according to the root namespace.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function qualifyClass($name)
+    {
+        return $name;
+    }
+
+    /**
      * Get the destination class path.
      *
      * @param string $name
@@ -82,6 +93,8 @@ class MenuMakeCommand extends GeneratorCommand
      */
     protected function getPath($name)
     {
-        return config('menus.path').DIRECTORY_SEPARATOR."${name}.php";
+        $menus = $this->laravel['config']['menus.path'] ?? app_path('Menus');
+
+        return "${menus}/${name}.php";
     }
 }
