@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Traits\Macroable;
 use SkoreLabs\LaravelMenuBuilder\Contracts\Arrayable;
+use SkoreLabs\LaravelMenuBuilder\Traits\HasMeta;
 use SkoreLabs\LaravelMenuBuilder\Traits\IsConditionallyRendered;
 use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
@@ -16,12 +17,13 @@ class MenuGroup implements Responsable, Arrayable
 {
     use Makeable;
     use Macroable;
+    use HasMeta;
     use IsConditionallyRendered;
 
     /**
      * @var mixed
      */
-    protected $title;
+    protected $label;
 
     /**
      * @var \Illuminate\Support\Collection
@@ -33,10 +35,14 @@ class MenuGroup implements Responsable, Arrayable
      *
      * @return void
      */
-    public function __construct($title = 'default', array $items = [])
+    public function __construct($label = 'default', array $items = [])
     {
-        $this->title = $title;
+        $this->label = $label;
         $this->items = Collection::make($items);
+
+        if ($this->label !== 'default') {
+            return $this->setName($this->label);
+        }
     }
 
     /**
@@ -51,10 +57,10 @@ class MenuGroup implements Responsable, Arrayable
      *
      * @return $this
      */
-    public function addLink($title, $uri, $params = [], $model = null, $meta = [])
+    public function addLink($title, $uri, $params = [], $model = null)
     {
         $this->items->add(
-            MenuLink::make(...func_get_args())
+            new MenuLink(...func_get_args())
         );
 
         return $this;
@@ -75,6 +81,19 @@ class MenuGroup implements Responsable, Arrayable
     }
 
     /**
+     * Set visible name for the menu group.
+     *
+     * @param mixed $name
+     * @return $this
+     */
+    public function setName($name)
+    {
+        $this->meta['name'] = $name;
+
+        return $this;
+    }
+
+    /**
      * Get the instance as an array.
      *
      * @param \Illuminate\Http\Request $request
@@ -84,11 +103,14 @@ class MenuGroup implements Responsable, Arrayable
     public function toArray(Request $request)
     {
         return [
-            $this->title => $this->items
-                ->each
-                ->authorizedToSee($request)
-                ->map
-                ->toArray(),
+            $this->label => [
+                'items' => $this->items
+                    ->each
+                    ->authorizedToSee($request)
+                    ->map
+                    ->toArray(),
+                'meta' => (object) $this->meta,
+            ]
         ];
     }
 

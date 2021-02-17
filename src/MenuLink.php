@@ -4,6 +4,7 @@ namespace SkoreLabs\LaravelMenuBuilder;
 
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Traits\Macroable;
+use SkoreLabs\LaravelMenuBuilder\Traits\HasMeta;
 use SkoreLabs\LaravelMenuBuilder\Traits\IsConditionallyRendered;
 use SkoreLabs\LaravelMenuBuilder\Traits\Makeable;
 
@@ -11,6 +12,7 @@ class MenuLink implements Arrayable
 {
     use Makeable;
     use Macroable;
+    use HasMeta;
     use IsConditionallyRendered;
 
     /**
@@ -27,11 +29,6 @@ class MenuLink implements Arrayable
      * @var mixed
      */
     protected $params;
-
-    /**
-     * @var mixed
-     */
-    protected $meta = [];
 
     /**
      * Instantiate menu link class.
@@ -89,20 +86,6 @@ class MenuLink implements Arrayable
     public function disable($condition = true)
     {
         $this->meta['disabled'] = $condition;
-
-        return $this;
-    }
-
-    /**
-     * Add meta to the link output.
-     *
-     * @param array $meta
-     *
-     * @return $this
-     */
-    public function withMeta(array $meta = [])
-    {
-        $this->meta = array_merge($this->meta, $meta);
 
         return $this;
     }

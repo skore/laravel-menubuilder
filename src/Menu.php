@@ -105,7 +105,7 @@ abstract class Menu implements Arrayable
      */
     protected function cacheKey(Request $request)
     {
-        return config('menus.key_prefix', 'menus').'.'.$this->identifier();
+        return config('menus.key_prefix', 'menus') . '.' . $this->identifier();
     }
 
     /**
@@ -114,13 +114,12 @@ abstract class Menu implements Arrayable
      * @param mixed $title
      * @param mixed $uri
      * @param array $params
-     * @param array $meta
      *
      * @return \SkoreLabs\LaravelMenuBuilder\MenuLink
      */
-    protected function addLink($title, $uri, $params = [], $meta = [])
+    protected function addLink($title, $uri, $params = [])
     {
-        return new MenuLink($title, $uri, $params, $meta);
+        return new MenuLink($title, $uri, $params);
     }
 
     /**
