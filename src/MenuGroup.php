@@ -83,6 +83,7 @@ class MenuGroup implements Responsable, Arrayable
      * Set visible name for the menu group.
      *
      * @param mixed $name
+     *
      * @return $this
      */
     public function setName($name)
@@ -109,7 +110,7 @@ class MenuGroup implements Responsable, Arrayable
                     ->map
                     ->toArray(),
                 'meta' => (object) $this->meta,
-            ]
+            ],
         ];
     }
 
