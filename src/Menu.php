@@ -105,7 +105,7 @@ abstract class Menu implements Arrayable
      */
     protected function cacheKey(Request $request)
     {
-        return config('menus.key_prefix', 'menus') . '.' . $this->identifier();
+        return config('menus.key_prefix', 'menus').'.'.$this->identifier();
     }
 
     /**
