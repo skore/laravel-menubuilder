@@ -80,8 +80,8 @@ class Manager
      * Inject data into all enabled integrations.
      *
      * @param \Illuminate\Http\Request $request
-     * @param mixed $key
-     * @param mixed $data
+     * @param mixed                    $key
+     * @param mixed                    $data
      *
      * @return void
      */
@@ -103,9 +103,9 @@ class Manager
     /**
      * Get the prefix for the package interactions.
      *
-     * @return mixed
-     *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
+     *
+     * @return mixed
      */
     public static function prefix()
     {

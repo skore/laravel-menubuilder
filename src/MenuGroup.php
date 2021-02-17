@@ -88,7 +88,7 @@ class MenuGroup implements Responsable, Arrayable
                 ->each
                 ->authorizedToSee($request)
                 ->map
-                ->toArray()
+                ->toArray(),
         ];
     }
 
