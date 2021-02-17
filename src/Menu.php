@@ -4,6 +4,7 @@ namespace SkoreLabs\LaravelMenuBuilder;
 
 use DateInterval;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -30,10 +31,11 @@ abstract class Menu implements Arrayable
      */
     public function __construct(Request $request)
     {
-        $resolved = $this->resolve($request);
+        $activeMenuArr = [];
 
-        Manager::dataInject($request, $this->identifier(), $resolved)
-            && $resolved;
+        Arr::set($activeMenuArr, $this->identifier(), $this->resolve($request));
+
+        Manager::activate($activeMenuArr);
     }
 
     /**
@@ -129,7 +131,7 @@ abstract class Menu implements Arrayable
      *
      * @return \SkoreLabs\LaravelMenuBuilder\MenuGroup
      */
-    public function addGroup($title = null, array $items = [])
+    public function addGroup($title = 'default', array $items = [])
     {
         return new MenuGroup($title, $items);
     }

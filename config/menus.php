@@ -8,7 +8,7 @@ return [
 
     'integrations' => [
 
-        'inertia' => true,
+        'inertia' => false,
 
         'blade' => false,
 

@@ -57,6 +57,8 @@ class ServiceProvider extends BaseServiceProvider
                     ? $menu::make($event->request)
                     : null;
             }
+
+            Manager::dataInject($event->request);
         });
     }
 }

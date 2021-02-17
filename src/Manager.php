@@ -18,15 +18,20 @@ class Manager
     public static $menus = [];
 
     /**
-     * Register the given menus.
+     * @var array
+     */
+    protected static $active = [];
+
+    /**
+     * Activate the given menus.
      *
      * @param array $menus
      *
      * @return static
      */
-    public static function menus(array $menus)
+    public static function activate(array $menus)
     {
-        static::$menus = array_merge(static::$menus, $menus);
+        static::$active = array_merge_recursive(static::$active, $menus);
 
         return new static();
     }
@@ -59,9 +64,10 @@ class Manager
             }
         }
 
-        static::menus(
-            Collection::make($menus)->sort()->mapWithKeys(fn ($class) => [$class => $class::$routes])->all()
-        );
+        static::$menus = Collection::make($menus)
+            ->sort()
+            ->mapWithKeys(fn ($class) => [$class => $class::$routes])
+            ->all();
     }
 
     /**
@@ -85,18 +91,18 @@ class Manager
      *
      * @return void
      */
-    public static function dataInject(Request $request, $key, $data)
+    public static function dataInject(Request $request)
     {
-        if (static::enabled('inertia') && $request->inertia()) {
-            inertia()->share($key, array_merge(inertia()->getShared($key), $data));
-        }
-
         if (static::enabled('json') && $request->wantsJson()) {
             // TODO:
         }
 
         if (static::enabled('blade') && !$request->wantsJson()) {
-            Session::flash(static::prefix(), array_merge(Session::get(static::prefix(), []), $data));
+            Session::flash(static::prefix(), static::$active);
+        }
+
+        if (static::enabled('inertia') && !$request->wantsJson()) {
+            inertia()->share(static::prefix(), static::$active);
         }
     }
 
