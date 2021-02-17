@@ -51,13 +51,12 @@ class MenuGroup implements Responsable, Arrayable
      * @param mixed $title
      * @param mixed $uri
      * @param mixed $params
-     * @param bool  $permission
      *
      * @throws \Illuminate\Contracts\Container\BindingResolutionException
      *
      * @return $this
      */
-    public function addLink($title, $uri, $params = [], $model = null)
+    public function addLink($title, $uri, $params = [])
     {
         $this->items->add(
             new MenuLink(...func_get_args())
