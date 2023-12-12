@@ -3,6 +3,7 @@
     "description": "Build menus and put them at different places (json, inertia, blade, spa, etc)",
     "type": "library",
     "license": "MIT",
+    "abandoned": true,
     "authors": [
         {
             "name": "Rubén Robles",
